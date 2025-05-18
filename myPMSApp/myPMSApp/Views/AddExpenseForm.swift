@@ -10,20 +10,35 @@ struct AddExpenseForm: View {
     @State private var objectId: String = ""
     @State private var showObjectId = false
     
+    private var isFormValid: Bool {
+        selectedCategory != nil && !description.isEmpty && amount > 0
+    }
+    
     var body: some View {
         Form {
             Section("Amount") {
-                TextField("Amount", value: $amount, format: .currency(code: "USD"))
-                    .keyboardType(.decimalPad)
+                ZStack(alignment: .leading) {
+                    if amount == 0 {
+                        Text("$")
+                            .foregroundStyle(.secondary)
+                            .padding(.leading, 8)
+                    }
+                    TextField("", value: $amount, format: .number)
+                        .keyboardType(.decimalPad)
+                        .multilineTextAlignment(.leading)
+                        .padding(.leading, amount == 0 ? 20 : 8)
+                }
             }
             
             Section("Details") {
                 TextField("Description", text: $description)
                 
-                Picker("Category", selection: $selectedCategory) {
-                    Text("Select a category").tag(nil as Category?)
-                    ForEach(tracker.categories) { category in
-                        Text(category.name).tag(category as Category?)
+                if !tracker.categories.isEmpty {
+                    Picker("Category", selection: $selectedCategory) {
+                        Text("Select a category").tag(Optional<Category>.none)
+                        ForEach(tracker.categories) { category in
+                            Text(category.name).tag(Optional(category))
+                        }
                     }
                 }
                 
@@ -64,20 +79,24 @@ struct AddExpenseForm: View {
             
             ToolbarItem(placement: .confirmationAction) {
                 Button("Add") {
-                    guard let category = selectedCategory else { return }
-                    
-                    let expense = Expense(
-                        amount: Decimal(amount),
-                        category: category,
-                        description: description,
-                        associatedObjectId: showObjectId ? objectId : nil
-                    )
-                    
-                    tracker.addExpense(expense)
-                    dismiss()
+                    addExpense()
                 }
-                .disabled(selectedCategory == nil || description.isEmpty || amount <= 0)
+                .disabled(!isFormValid)
             }
         }
+    }
+    
+    private func addExpense() {
+        guard let category = selectedCategory else { return }
+        
+        let expense = Expense(
+            amount: Decimal(amount),
+            category: category,
+            description: description,
+            associatedObjectId: showObjectId ? objectId : nil
+        )
+        
+        tracker.addExpense(expense)
+        dismiss()
     }
 }

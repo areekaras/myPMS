@@ -8,8 +8,13 @@ struct ExpenseListView: View {
         List {
             ForEach(tracker.categories) { category in
                 Section {
-                    ForEach(tracker.expenses(for: category.id)) { expense in
-                        ExpenseRow(expense: expense)
+                    if tracker.expenses(for: category.id).isEmpty {
+                        Text("No expenses")
+                            .foregroundStyle(.secondary)
+                    } else {
+                        ForEach(tracker.expenses(for: category.id)) { expense in
+                            ExpenseRow(expense: expense)
+                        }
                     }
                 } header: {
                     CategoryHeader(
@@ -54,19 +59,30 @@ private struct CategoryHeader: View {
     let isOverBudget: Bool
     
     var body: some View {
-        HStack {
-            Text(category.name)
-            Spacer()
-            VStack(alignment: .trailing) {
+        VStack(alignment: .leading, spacing: 4) {
+            HStack {
+                Text(category.name)
+                    .font(.headline)
+                Spacer()
                 Text(total.formatted(.currency(code: "USD")))
                     .foregroundStyle(isOverBudget ? .red : .primary)
-                if let budget = category.budget {
-                    Text("\(budget.formatted(.currency(code: "USD"))) budget")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
+            }
+            
+            if let budget = category.budget {
+                HStack {
+                    Text("Budget:")
+                    Text(budget.formatted(.currency(code: "USD")))
+                    Spacer()
+                    Text("Remaining:")
+                    let remaining = budget - total
+                    Text(remaining.formatted(.currency(code: "USD")))
+                        .foregroundStyle(remaining < 0 ? .red : .green)
                 }
+                .font(.caption)
+                .foregroundStyle(.secondary)
             }
         }
+        .padding(.vertical, 4)
     }
 }
 
