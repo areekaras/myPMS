@@ -52,10 +52,19 @@ struct ContentView: View {
 }
 
 struct ExpensesView: View {
+    @StateObject private var tracker = ExpenseTracker()
+    
     var body: some View {
         NavigationStack {
-            Text("Expenses")
-                .navigationTitle("Expenses")
+            ExpenseListView(tracker: tracker)
+        }
+        .onAppear {
+            // Add sample categories if empty
+            if tracker.categories.isEmpty {
+                tracker.addCategory(Category(name: "Food", budget: 500))
+                tracker.addCategory(Category(name: "Utilities", budget: 200))
+                tracker.addCategory(Category(name: "Entertainment", budget: 100))
+            }
         }
     }
 }

@@ -2,7 +2,11 @@ import Foundation
 
 class ExpenseTracker: ObservableObject {
     @Published private(set) var expenses: [Expense] = []
-    @Published private(set) var categories: [Category] = []
+    @Published private(set) var categories: [Category] = [
+        Category(name: "Food", budget: 500),
+        Category(name: "Utilities", budget: 200),
+        Category(name: "Entertainment", budget: 100)
+    ]
     
     
     // Category-based analytics
