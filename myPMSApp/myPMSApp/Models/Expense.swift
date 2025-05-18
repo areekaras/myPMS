@@ -6,7 +6,7 @@ struct Expense: Identifiable, Hashable, Codable {
     let category: Category
     let date: Date
     let description: String
-    let associatedObjectId: String // To map expense to any object
+    let associatedObjectId: String? // Optional - not all expenses need to be tracked
     
     init(
         id: UUID = UUID(),
@@ -14,7 +14,7 @@ struct Expense: Identifiable, Hashable, Codable {
         category: Category,
         date: Date = Date(),
         description: String,
-        associatedObjectId: String
+        associatedObjectId: String? = nil
     ) {
         self.id = id
         self.amount = amount
