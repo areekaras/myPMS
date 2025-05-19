@@ -3,25 +3,54 @@ import SwiftUI
 struct ExpenseListView: View {
     @ObservedObject var tracker: ExpenseTracker
     @State private var showingAddExpense = false
+    @State private var showingError = false
     
     var body: some View {
-        List {
-            ForEach(tracker.categories) { category in
-                Section {
-                    if tracker.expenses(for: category.id).isEmpty {
-                        Text("No expenses")
-                            .foregroundStyle(.secondary)
-                    } else {
-                        ForEach(tracker.expenses(for: category.id)) { expense in
-                            ExpenseRow(expense: expense)
+        Group {
+            switch tracker.loadingState {
+            case .loading:
+                ProgressView("Loading expenses...")
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+            case .error(let message):
+                VStack(spacing: 16) {
+                    Image(systemName: "exclamationmark.triangle.fill")
+                        .font(.largeTitle)
+                        .foregroundStyle(.red)
+                    Text("Error loading expenses")
+                        .font(.headline)
+                    Text(message)
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                        .multilineTextAlignment(.center)
+                    Button("Try Again") {
+                        Task {
+                            await tracker.loadInitialData()
                         }
                     }
-                } header: {
-                    CategoryHeader(
-                        category: category,
-                        total: tracker.totalExpenses(for: category.id),
-                        isOverBudget: tracker.isOverBudget(for: category.id)
-                    )
+                    .buttonStyle(.bordered)
+                }
+                .padding()
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+            case .idle:
+                List {
+                    ForEach(tracker.categories) { category in
+                        Section {
+                            if tracker.expenses(for: category.id).isEmpty {
+                                Text("No expenses")
+                                    .foregroundStyle(.secondary)
+                            } else {
+                                ForEach(tracker.expenses(for: category.id)) { expense in
+                                    ExpenseRow(expense: expense)
+                                }
+                            }
+                        } header: {
+                            CategoryHeader(
+                                category: category,
+                                total: tracker.totalExpenses(for: category.id),
+                                isOverBudget: tracker.isOverBudget(for: category.id)
+                            )
+                        }
+                    }
                 }
             }
         }
@@ -34,6 +63,7 @@ struct ExpenseListView: View {
                 } label: {
                     Image(systemName: "plus")
                 }
+                .disabled(tracker.loadingState != .idle)
             }
             #else
             ToolbarItem {
@@ -42,12 +72,20 @@ struct ExpenseListView: View {
                 } label: {
                     Image(systemName: "plus")
                 }
+                .disabled(tracker.loadingState != .idle)
             }
             #endif
         }
         .sheet(isPresented: $showingAddExpense) {
             NavigationStack {
                 AddExpenseForm(tracker: tracker)
+            }
+        }
+        .alert("Error", isPresented: $showingError) {
+            Button("OK") {}
+        } message: {
+            if let error = tracker.errorMessage {
+                Text(error)
             }
         }
     }

@@ -5,6 +5,14 @@ import Combine
 class ExpenseTracker: ObservableObject {
     @Published private(set) var expenses: [UExpense] = []
     @Published private(set) var categories: [Category] = []
+    @Published private(set) var loadingState = LoadingState.idle
+    @Published private(set) var errorMessage: String?
+    
+    enum LoadingState {
+        case idle
+        case loading
+        case error(String)
+    }
     
     private var cancellables = Set<AnyCancellable>()
     
@@ -14,10 +22,14 @@ class ExpenseTracker: ObservableObject {
         }
     }
     
-    // Load initial data from Supabase
-    private func loadInitialData() async {
+    // Make this public so view can call it
+    func loadInitialData() async {
+        await MainActor.run {
+            loadingState = .loading
+            errorMessage = nil
+        }
+        
         do {
-            // Fetch categories
             let categories: [Category] = try await supabase
                 .from("categories")
                 .select()
@@ -27,9 +39,16 @@ class ExpenseTracker: ObservableObject {
                 self.categories = categories
             }
             
-            // Fetch expenses
             await loadExpenses()
+            
+            await MainActor.run {
+                loadingState = .idle
+            }
         } catch {
+            await MainActor.run {
+                loadingState = .error(error.localizedDescription)
+                errorMessage = error.localizedDescription
+            }
             print("Error loading initial data: \(error)")
         }
     }
@@ -54,6 +73,10 @@ class ExpenseTracker: ObservableObject {
                 self.expenses = uExpenses
             }
         } catch {
+            await MainActor.run {
+                loadingState = .error(error.localizedDescription)
+                errorMessage = error.localizedDescription
+            }
             print("Error loading expenses: \(error)")
         }
     }

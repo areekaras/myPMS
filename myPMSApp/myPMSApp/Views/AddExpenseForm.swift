@@ -9,6 +9,7 @@ struct AddExpenseForm: View {
     @State private var selectedCategory: Category?
     @State private var objectId: String = ""
     @State private var showObjectId = false
+    @State private var isAddingExpense = false
     
     private var isFormValid: Bool {
         selectedCategory != nil && !description.isEmpty && amount > 0
@@ -81,7 +82,7 @@ struct AddExpenseForm: View {
                 Button("Add") {
                     addExpense()
                 }
-                .disabled(!isFormValid)
+                .disabled(!isFormValid || isAddingExpense)
             }
         }
     }
@@ -98,9 +99,12 @@ struct AddExpenseForm: View {
             associatedObjectId: showObjectId ? objectId : nil
         )
         
+        isAddingExpense = true
+        
         Task {
             await tracker.addExpense(uExpense)
             await MainActor.run {
+                isAddingExpense = false
                 dismiss()
             }
         }
