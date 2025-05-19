@@ -64,18 +64,18 @@ private struct CategoryHeader: View {
                 Text(category.name)
                     .font(.headline)
                 Spacer()
-                Text(total.formatted(.currency(code: "USD")))
+                Text(total.formatted(.currency(code: "SGD")))
                     .foregroundStyle(isOverBudget ? .red : .primary)
             }
             
             if let budget = category.budget {
                 HStack {
                     Text("Budget:")
-                    Text(budget.formatted(.currency(code: "USD")))
+                    Text(budget.formatted(.currency(code: "SGD")))
                     Spacer()
                     Text("Remaining:")
                     let remaining = budget - total
-                    Text(remaining.formatted(.currency(code: "USD")))
+                    Text(remaining.formatted(.currency(code: "SGD")))
                         .foregroundStyle(remaining < 0 ? .red : .green)
                 }
                 .font(.caption)
@@ -100,7 +100,7 @@ private struct ExpenseRow: View {
             
             Spacer()
             
-            Text(expense.amount.formatted(.currency(code: "USD")))
+            Text(expense.amount.formatted(.currency(code: "SGD")))
                 .foregroundStyle(.primary)
         }
     }

@@ -19,14 +19,14 @@ struct AddExpenseForm: View {
             Section("Amount") {
                 ZStack(alignment: .leading) {
                     if amount == 0 {
-                        Text("$")
+                        Text("S$")
                             .foregroundStyle(.secondary)
                             .padding(.leading, 8)
                     }
                     TextField("", value: $amount, format: .number)
                         .keyboardType(.decimalPad)
                         .multilineTextAlignment(.leading)
-                        .padding(.leading, amount == 0 ? 20 : 8)
+                        .padding(.leading, amount == 0 ? 24 : 8)
                 }
             }
             
@@ -48,7 +48,7 @@ struct AddExpenseForm: View {
                         HStack {
                             Text("Budget Remaining:")
                             Spacer()
-                            Text(remaining.formatted(.currency(code: "USD")))
+                            Text(remaining.formatted(.currency(code: "SGD")))
                                 .foregroundStyle(remaining < Decimal(amount) ? .red : .green)
                         }
                     }
