@@ -89,14 +89,20 @@ struct AddExpenseForm: View {
     private func addExpense() {
         guard let category = selectedCategory else { return }
         
-        let expense = Expense(
+        let uExpense = UExpense(
+            id: UUID(),
             amount: Decimal(amount),
             category: category,
+            date: Date(),
             description: description,
             associatedObjectId: showObjectId ? objectId : nil
         )
         
-        tracker.addExpense(expense)
-        dismiss()
+        Task {
+            await tracker.addExpense(uExpense)
+            await MainActor.run {
+                dismiss()
+            }
+        }
     }
 }

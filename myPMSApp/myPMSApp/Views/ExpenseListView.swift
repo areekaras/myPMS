@@ -87,7 +87,7 @@ private struct CategoryHeader: View {
 }
 
 private struct ExpenseRow: View {
-    let expense: Expense
+    let expense: UExpense
     
     var body: some View {
         HStack {

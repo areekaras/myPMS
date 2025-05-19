@@ -43,8 +43,10 @@ class ExpenseTracker: ObservableObject {
                 .execute()
                 .value
             
-            let uExpenses = expenses.compactMap { expense in
-                guard let category = categories.first(where: { $0.id == expense.categoryId }) else { return nil }
+            let uExpenses: [UExpense] = expenses.compactMap { expense -> UExpense? in
+                guard let category = self.categories.first(where: { $0.id == expense.categoryId }) else {
+                    return nil
+                }
                 return UExpense(from: expense, category: category)
             }
             

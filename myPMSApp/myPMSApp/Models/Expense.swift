@@ -1,40 +1,17 @@
 import Foundation
 
-struct Expense: Identifiable, Hashable, Codable {
+// Database model
+struct Expense: Codable {
     let id: UUID
     let amount: Decimal
     let categoryId: UUID
     let date: Date
     let description: String
     let associatedObjectId: String?
-    
-    init(
-        id: UUID = UUID(),
-        amount: Decimal,
-        categoryId: UUID,
-        date: Date = Date(),
-        description: String,
-        associatedObjectId: String? = nil
-    ) {
-        self.id = id
-        self.amount = amount
-        self.categoryId = categoryId
-        self.date = date
-        self.description = description
-        self.associatedObjectId = associatedObjectId
-    }
-    
-    func hash(into hasher: inout Hasher) {
-        hasher.combine(id)
-    }
-    
-    static func == (lhs: Expense, rhs: Expense) -> Bool {
-        lhs.id == rhs.id
-    }
 }
 
-// UI-compatible Expense model
-struct UExpense: Identifiable, Hashable {
+// UI model
+struct UExpense: Identifiable {
     let id: UUID
     let amount: Decimal
     let category: Category
@@ -49,5 +26,21 @@ struct UExpense: Identifiable, Hashable {
         self.date = expense.date
         self.description = expense.description
         self.associatedObjectId = expense.associatedObjectId
+    }
+    
+    init(
+        id: UUID = UUID(),
+        amount: Decimal,
+        category: Category,
+        date: Date = Date(),
+        description: String,
+        associatedObjectId: String? = nil
+    ) {
+        self.id = id
+        self.amount = amount
+        self.category = category
+        self.date = date
+        self.description = description
+        self.associatedObjectId = associatedObjectId
     }
 }
