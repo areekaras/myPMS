@@ -2,17 +2,18 @@ import Foundation
 import Supabase
 import Combine
 
+@MainActor
 class ExpenseTracker: ObservableObject {
-    @Published private(set) var expenses: [UExpense] = []
-    @Published private(set) var categories: [Category] = []
-    @Published private(set) var loadingState = LoadingState.idle
-    @Published private(set) var errorMessage: String?
-    
-    enum LoadingState {
+    enum LoadingState: Equatable {
         case idle
         case loading
         case error(String)
     }
+    
+    @Published private(set) var expenses: [UExpense] = []
+    @Published private(set) var categories: [Category] = []
+    @Published private(set) var loadingState = LoadingState.idle
+    @Published private(set) var errorMessage: String?
     
     private var cancellables = Set<AnyCancellable>()
     
@@ -22,12 +23,9 @@ class ExpenseTracker: ObservableObject {
         }
     }
     
-    // Make this public so view can call it
     func loadInitialData() async {
-        await MainActor.run {
-            loadingState = .loading
-            errorMessage = nil
-        }
+        loadingState = .loading
+        errorMessage = nil
         
         do {
             let categories: [Category] = try await supabase
@@ -35,25 +33,18 @@ class ExpenseTracker: ObservableObject {
                 .select()
                 .execute()
                 .value
-            await MainActor.run {
-                self.categories = categories
-            }
+            self.categories = categories
             
             await loadExpenses()
             
-            await MainActor.run {
-                loadingState = .idle
-            }
+            loadingState = .idle
         } catch {
-            await MainActor.run {
-                loadingState = .error(error.localizedDescription)
-                errorMessage = error.localizedDescription
-            }
+            loadingState = .error(error.localizedDescription)
+            errorMessage = error.localizedDescription
             print("Error loading initial data: \(error)")
         }
     }
     
-    // Load expenses and map to UExpense
     private func loadExpenses() async {
         do {
             let expenses: [Expense] = try await supabase
@@ -69,19 +60,14 @@ class ExpenseTracker: ObservableObject {
                 return UExpense(from: expense, category: category)
             }
             
-            await MainActor.run {
-                self.expenses = uExpenses
-            }
+            self.expenses = uExpenses
         } catch {
-            await MainActor.run {
-                loadingState = .error(error.localizedDescription)
-                errorMessage = error.localizedDescription
-            }
+            loadingState = .error(error.localizedDescription)
+            errorMessage = error.localizedDescription
             print("Error loading expenses: \(error)")
         }
     }
     
-    // CRUD Operations
     func addExpense(_ uExpense: UExpense) async {
         do {
             let expense = Expense(
@@ -117,9 +103,7 @@ class ExpenseTracker: ObservableObject {
                 .execute()
                 .value
             
-            await MainActor.run {
-                self.categories = categories
-            }
+            self.categories = categories
         } catch {
             print("Error adding category: \(error)")
         }

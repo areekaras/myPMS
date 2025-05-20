@@ -1,4 +1,5 @@
 import SwiftUI
+import Combine
 
 struct AddExpenseForm: View {
     @ObservedObject var tracker: ExpenseTracker
@@ -80,15 +81,19 @@ struct AddExpenseForm: View {
             
             ToolbarItem(placement: .confirmationAction) {
                 Button("Add") {
-                    addExpense()
+                    Task {
+                        await addExpense()
+                    }
                 }
                 .disabled(!isFormValid || isAddingExpense)
             }
         }
     }
     
-    private func addExpense() {
+    private func addExpense() async {
         guard let category = selectedCategory else { return }
+        
+        isAddingExpense = true
         
         let uExpense = UExpense(
             id: UUID(),
@@ -99,14 +104,11 @@ struct AddExpenseForm: View {
             associatedObjectId: showObjectId ? objectId : nil
         )
         
-        isAddingExpense = true
+        await tracker.addExpense(uExpense)
         
-        Task {
-            await tracker.addExpense(uExpense)
-            await MainActor.run {
-                isAddingExpense = false
-                dismiss()
-            }
+        await MainActor.run {
+            isAddingExpense = false
+            dismiss()
         }
     }
 }
