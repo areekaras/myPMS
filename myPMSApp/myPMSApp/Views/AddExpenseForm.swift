@@ -1,5 +1,4 @@
 import SwiftUI
-import Combine
 
 struct AddExpenseForm: View {
     @ObservedObject var tracker: ExpenseTracker
@@ -11,6 +10,8 @@ struct AddExpenseForm: View {
     @State private var objectId: String = ""
     @State private var showObjectId = false
     @State private var isAddingExpense = false
+    @State private var showError = false
+    @State private var errorMessage: String?
     
     private var isFormValid: Bool {
         selectedCategory != nil && !description.isEmpty && amount > 0
@@ -88,6 +89,21 @@ struct AddExpenseForm: View {
                 .disabled(!isFormValid || isAddingExpense)
             }
         }
+        .alert("Error Adding Expense", isPresented: $showError) {
+            Button("OK") {}
+        } message: {
+            if let errorMessage {
+                Text(errorMessage)
+            }
+        }
+        .overlay {
+            if isAddingExpense {
+                ProgressView("Adding expense...")
+                    .padding()
+                    .background(.regularMaterial)
+                    .cornerRadius(8)
+            }
+        }
     }
     
     private func addExpense() async {
@@ -95,20 +111,33 @@ struct AddExpenseForm: View {
         
         isAddingExpense = true
         
-        let uExpense = UExpense(
-            id: UUID(),
-            amount: Decimal(amount),
-            category: category,
-            date: Date(),
-            description: description,
-            associatedObjectId: showObjectId ? objectId : nil
-        )
-        
-        await tracker.addExpense(uExpense)
-        
-        await MainActor.run {
-            isAddingExpense = false
-            dismiss()
+        do {
+            let expense = Expense(
+                id: UUID(),
+                amount: Decimal(amount),
+                categoryId: category.id,
+                date: Date(),
+                description: description,
+                associatedObjectId: showObjectId ? objectId : nil
+            )
+            
+            try await supabase
+                .from("expenses")
+                .insert(expense)
+                .execute()
+            
+            await tracker.loadInitialData()
+            
+            await MainActor.run {
+                isAddingExpense = false
+                dismiss()
+            }
+        } catch {
+            await MainActor.run {
+                isAddingExpense = false
+                errorMessage = error.localizedDescription
+                showError = true
+            }
         }
     }
 }
