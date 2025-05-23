@@ -72,4 +72,6 @@ struct PlannerView: View {
 
 #Preview {
     ContentView()
+        .environmentObject(ExpenseTracker())
+        .environmentObject(AuthManager())
 }

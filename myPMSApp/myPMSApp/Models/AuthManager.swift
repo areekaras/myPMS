@@ -3,15 +3,43 @@ import Supabase
 
 class AuthManager: ObservableObject {
     @Published var isAuthenticated = false
+    @Published var isLoading = false
+    @Published var error: String?
     
-    func signInAnonymously() async throws {
-        let session = try await supabase.auth.signIn(
-            email: "anonymous@user.com",
-            password: "anonymous123"
-        )
+    func signInWithGoogle() async {
+        isLoading = true
+        error = nil
         
-        await MainActor.run {
-            self.isAuthenticated = true
+        do {
+            try await supabase.auth.signInWithOAuth(
+                provider: .google,
+                redirectTo: AppEnvironment.googleCallbackUrlString
+            )
+            await MainActor.run {
+                self.isAuthenticated = true
+                self.isLoading = false
+            }
+        } catch {
+            await MainActor.run {
+                self.error = error.localizedDescription
+                self.isLoading = false
+            }
+        }
+    }
+    
+    func signOut() async {
+        isLoading = true
+        do {
+            try await supabase.auth.signOut()
+            await MainActor.run {
+                self.isAuthenticated = false
+                self.isLoading = false
+            }
+        } catch {
+            await MainActor.run {
+                self.error = error.localizedDescription
+                self.isLoading = false
+            }
         }
     }
 }
