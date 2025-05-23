@@ -6,6 +6,15 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		609073FE2DDBE84C004E1355 /* Auth in Frameworks */ = {isa = PBXBuildFile; productRef = 609073FD2DDBE84C004E1355 /* Auth */; };
+		609074002DDBE84C004E1355 /* Functions in Frameworks */ = {isa = PBXBuildFile; productRef = 609073FF2DDBE84C004E1355 /* Functions */; };
+		609074022DDBE84C004E1355 /* PostgREST in Frameworks */ = {isa = PBXBuildFile; productRef = 609074012DDBE84C004E1355 /* PostgREST */; };
+		609074042DDBE84C004E1355 /* Realtime in Frameworks */ = {isa = PBXBuildFile; productRef = 609074032DDBE84C004E1355 /* Realtime */; };
+		609074062DDBE84C004E1355 /* Storage in Frameworks */ = {isa = PBXBuildFile; productRef = 609074052DDBE84C004E1355 /* Storage */; };
+		609074082DDBE84C004E1355 /* Supabase in Frameworks */ = {isa = PBXBuildFile; productRef = 609074072DDBE84C004E1355 /* Supabase */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		609073A52DD9973B004E1355 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -27,11 +36,25 @@
 		609073932DD9973A004E1355 /* myPMSApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = myPMSApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		609073A42DD9973B004E1355 /* myPMSAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = myPMSAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		609073AE2DD9973B004E1355 /* myPMSAppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = myPMSAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		60A401262DE04E3800B14A67 /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		60A401212DE0368F00B14A67 /* Exceptions for "myPMSApp" folder in "myPMSApp" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 609073922DD9973A004E1355 /* myPMSApp */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		609073952DD9973A004E1355 /* myPMSApp */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				60A401212DE0368F00B14A67 /* Exceptions for "myPMSApp" folder in "myPMSApp" target */,
+			);
 			path = myPMSApp;
 			sourceTree = "<group>";
 		};
@@ -52,6 +75,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				609074022DDBE84C004E1355 /* PostgREST in Frameworks */,
+				609074002DDBE84C004E1355 /* Functions in Frameworks */,
+				609074082DDBE84C004E1355 /* Supabase in Frameworks */,
+				609073FE2DDBE84C004E1355 /* Auth in Frameworks */,
+				609074062DDBE84C004E1355 /* Storage in Frameworks */,
+				609074042DDBE84C004E1355 /* Realtime in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -78,6 +107,7 @@
 				609073952DD9973A004E1355 /* myPMSApp */,
 				609073A72DD9973B004E1355 /* myPMSAppTests */,
 				609073B12DD9973B004E1355 /* myPMSAppUITests */,
+				609073FC2DDBE84C004E1355 /* Frameworks */,
 				609073942DD9973A004E1355 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -90,6 +120,13 @@
 				609073AE2DD9973B004E1355 /* myPMSAppUITests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		609073FC2DDBE84C004E1355 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -112,6 +149,12 @@
 			);
 			name = myPMSApp;
 			packageProductDependencies = (
+				609073FD2DDBE84C004E1355 /* Auth */,
+				609073FF2DDBE84C004E1355 /* Functions */,
+				609074012DDBE84C004E1355 /* PostgREST */,
+				609074032DDBE84C004E1355 /* Realtime */,
+				609074052DDBE84C004E1355 /* Storage */,
+				609074072DDBE84C004E1355 /* Supabase */,
 			);
 			productName = myPMSApp;
 			productReference = 609073932DD9973A004E1355 /* myPMSApp.app */;
@@ -195,6 +238,9 @@
 			);
 			mainGroup = 6090738A2DD9973A004E1355;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				609073FB2DDBE81F004E1355 /* XCRemoteSwiftPackageReference "supabase-swift" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 609073942DD9973A004E1355 /* Products */;
 			projectDirPath = "";
@@ -271,6 +317,7 @@
 /* Begin XCBuildConfiguration section */
 		609073B62DD9973B004E1355 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 60A401262DE04E3800B14A67 /* Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -332,6 +379,7 @@
 		};
 		609073B72DD9973B004E1355 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 60A401262DE04E3800B14A67 /* Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -385,6 +433,7 @@
 		};
 		609073B92DD9973B004E1355 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 60A401262DE04E3800B14A67 /* Config.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -396,6 +445,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = myPMSApp/Info.plist;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -424,6 +474,7 @@
 		};
 		609073BA2DD9973B004E1355 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 60A401262DE04E3800B14A67 /* Config.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -435,6 +486,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = myPMSApp/Info.plist;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -591,6 +643,50 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		609073FB2DDBE81F004E1355 /* XCRemoteSwiftPackageReference "supabase-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/supabase/supabase-swift.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.5.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		609073FD2DDBE84C004E1355 /* Auth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 609073FB2DDBE81F004E1355 /* XCRemoteSwiftPackageReference "supabase-swift" */;
+			productName = Auth;
+		};
+		609073FF2DDBE84C004E1355 /* Functions */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 609073FB2DDBE81F004E1355 /* XCRemoteSwiftPackageReference "supabase-swift" */;
+			productName = Functions;
+		};
+		609074012DDBE84C004E1355 /* PostgREST */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 609073FB2DDBE81F004E1355 /* XCRemoteSwiftPackageReference "supabase-swift" */;
+			productName = PostgREST;
+		};
+		609074032DDBE84C004E1355 /* Realtime */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 609073FB2DDBE81F004E1355 /* XCRemoteSwiftPackageReference "supabase-swift" */;
+			productName = Realtime;
+		};
+		609074052DDBE84C004E1355 /* Storage */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 609073FB2DDBE81F004E1355 /* XCRemoteSwiftPackageReference "supabase-swift" */;
+			productName = Storage;
+		};
+		609074072DDBE84C004E1355 /* Supabase */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 609073FB2DDBE81F004E1355 /* XCRemoteSwiftPackageReference "supabase-swift" */;
+			productName = Supabase;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 6090738B2DD9973A004E1355 /* Project object */;
 }

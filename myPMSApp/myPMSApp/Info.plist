@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>com.areekaras.myPMSApp</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>dmmpqfixtgdanpgvofzr</string>
+			</array>
+		</dict>
+	</array>
+	<key>SUPABASE_KEY</key>
+	<string>$(SUPABASE_KEY)</string>
+	<key>SUPABASE_URL</key>
+	<string>$(SUPABASE_URL)</string>
+	<key>GOOGLE_CALLBACK_URL</key>
+	<string>$(GOOGLE_CALLBACK_URL)</string>
+</dict>
+</plist>

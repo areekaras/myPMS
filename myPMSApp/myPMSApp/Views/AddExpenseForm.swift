@@ -9,6 +9,9 @@ struct AddExpenseForm: View {
     @State private var selectedCategory: Category?
     @State private var objectId: String = ""
     @State private var showObjectId = false
+    @State private var isAddingExpense = false
+    @State private var showError = false
+    @State private var errorMessage: String?
     
     private var isFormValid: Bool {
         selectedCategory != nil && !description.isEmpty && amount > 0
@@ -17,16 +20,12 @@ struct AddExpenseForm: View {
     var body: some View {
         Form {
             Section("Amount") {
-                ZStack(alignment: .leading) {
-                    if amount == 0 {
-                        Text("$")
-                            .foregroundStyle(.secondary)
-                            .padding(.leading, 8)
-                    }
-                    TextField("", value: $amount, format: .number)
+                HStack(spacing: 8) {
+                    Text("S$")
+                        .foregroundStyle(.secondary)
+                    TextField("0.00", value: $amount, format: .number)
                         .keyboardType(.decimalPad)
                         .multilineTextAlignment(.leading)
-                        .padding(.leading, amount == 0 ? 20 : 8)
                 }
             }
             
@@ -48,7 +47,7 @@ struct AddExpenseForm: View {
                         HStack {
                             Text("Budget Remaining:")
                             Spacer()
-                            Text(remaining.formatted(.currency(code: "USD")))
+                            Text(remaining.formatted(.currency(code: "SGD")))
                                 .foregroundStyle(remaining < Decimal(amount) ? .red : .green)
                         }
                     }
@@ -79,24 +78,62 @@ struct AddExpenseForm: View {
             
             ToolbarItem(placement: .confirmationAction) {
                 Button("Add") {
-                    addExpense()
+                    Task {
+                        await addExpense()
+                    }
                 }
-                .disabled(!isFormValid)
+                .disabled(!isFormValid || isAddingExpense)
+            }
+        }
+        .alert("Error Adding Expense", isPresented: $showError) {
+            Button("OK") {}
+        } message: {
+            if let errorMessage {
+                Text(errorMessage)
+            }
+        }
+        .overlay {
+            if isAddingExpense {
+                ProgressView("Adding expense...")
+                    .padding()
+                    .background(.regularMaterial)
+                    .cornerRadius(8)
             }
         }
     }
     
-    private func addExpense() {
+    private func addExpense() async {
         guard let category = selectedCategory else { return }
         
-        let expense = Expense(
-            amount: Decimal(amount),
-            category: category,
-            description: description,
-            associatedObjectId: showObjectId ? objectId : nil
-        )
+        isAddingExpense = true
         
-        tracker.addExpense(expense)
-        dismiss()
+        do {
+            let expense = Expense(
+                id: UUID(),
+                amount: Decimal(amount),
+                categoryId: category.id,
+                date: Date(),
+                description: description,
+                associatedObjectId: showObjectId ? objectId : nil
+            )
+            
+            try await supabase
+                .from("expenses")
+                .insert(expense)
+                .execute()
+            
+            await tracker.loadInitialData()
+            
+            await MainActor.run {
+                isAddingExpense = false
+                dismiss()
+            }
+        } catch {
+            await MainActor.run {
+                isAddingExpense = false
+                errorMessage = error.localizedDescription
+                showError = true
+            }
+        }
     }
 }
