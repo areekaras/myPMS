@@ -20,16 +20,12 @@ struct AddExpenseForm: View {
     var body: some View {
         Form {
             Section("Amount") {
-                ZStack(alignment: .leading) {
-                    if amount == 0 {
-                        Text("S$")
-                            .foregroundStyle(.secondary)
-                            .padding(.leading, 8)
-                    }
-                    TextField("", value: $amount, format: .number)
+                HStack(spacing: 8) {
+                    Text("S$")
+                        .foregroundStyle(.secondary)
+                    TextField("0.00", value: $amount, format: .number)
                         .keyboardType(.decimalPad)
                         .multilineTextAlignment(.leading)
-                        .padding(.leading, amount == 0 ? 24 : 8)
                 }
             }
             
