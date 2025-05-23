@@ -36,11 +36,25 @@
 		609073932DD9973A004E1355 /* myPMSApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = myPMSApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		609073A42DD9973B004E1355 /* myPMSAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = myPMSAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		609073AE2DD9973B004E1355 /* myPMSAppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = myPMSAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		60A401262DE04E3800B14A67 /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		60A401212DE0368F00B14A67 /* Exceptions for "myPMSApp" folder in "myPMSApp" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 609073922DD9973A004E1355 /* myPMSApp */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		609073952DD9973A004E1355 /* myPMSApp */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				60A401212DE0368F00B14A67 /* Exceptions for "myPMSApp" folder in "myPMSApp" target */,
+			);
 			path = myPMSApp;
 			sourceTree = "<group>";
 		};
@@ -303,6 +317,7 @@
 /* Begin XCBuildConfiguration section */
 		609073B62DD9973B004E1355 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 60A401262DE04E3800B14A67 /* Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -364,6 +379,7 @@
 		};
 		609073B72DD9973B004E1355 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 60A401262DE04E3800B14A67 /* Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -417,6 +433,7 @@
 		};
 		609073B92DD9973B004E1355 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 60A401262DE04E3800B14A67 /* Config.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -428,6 +445,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = myPMSApp/Info.plist;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -456,6 +474,7 @@
 		};
 		609073BA2DD9973B004E1355 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 60A401262DE04E3800B14A67 /* Config.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -467,6 +486,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = myPMSApp/Info.plist;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;

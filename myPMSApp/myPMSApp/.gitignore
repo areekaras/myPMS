@@ -1,0 +1,8 @@
+# Xcode
+xcuserdata/
+*.xcscmblueprint
+*.xccheckout
+.DS_Store
+
+# Config files with sensitive data
+Config.xcconfig

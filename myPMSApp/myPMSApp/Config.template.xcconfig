@@ -1,0 +1,8 @@
+// Supabase
+HTTPSPROTOCOL = https:/
+SUPABASE_URL = $(HTTPSPROTOCOL)/your_supabase_url_here
+SUPABASE_KEY = your_supabase_key_here
+
+// Google Auth (for future)
+// GOOGLE_CLIENT_ID = your_client_id_here
+// GOOGLE_REVERSED_CLIENT_ID = your_reversed_client_id_here
