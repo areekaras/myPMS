@@ -7,13 +7,15 @@ class AuthManager: ObservableObject {
     @Published var error: String?
     
     func signInWithGoogle() async {
-        isLoading = true
-        error = nil
+        await MainActor.run {
+            isLoading = true
+            error = nil
+        }
         
         do {
             try await supabase.auth.signInWithOAuth(
                 provider: .google,
-                redirectTo: AppEnvironment.googleCallbackUrlString
+                redirectTo: AppEnvironment.googleCallbackUrl
             )
             await MainActor.run {
                 self.isAuthenticated = true
@@ -28,7 +30,9 @@ class AuthManager: ObservableObject {
     }
     
     func signOut() async {
-        isLoading = true
+        await MainActor.run {
+            isLoading = true
+        }
         do {
             try await supabase.auth.signOut()
             await MainActor.run {
