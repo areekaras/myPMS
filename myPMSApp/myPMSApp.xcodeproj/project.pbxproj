@@ -109,6 +109,7 @@
 				609073B12DD9973B004E1355 /* myPMSAppUITests */,
 				609073FC2DDBE84C004E1355 /* Frameworks */,
 				609073942DD9973A004E1355 /* Products */,
+				60A401E02DE26FB300B14A67 /* Recovered References */,
 			);
 			sourceTree = "<group>";
 		};
@@ -127,6 +128,14 @@
 			children = (
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		60A401E02DE26FB300B14A67 /* Recovered References */ = {
+			isa = PBXGroup;
+			children = (
+				60A401262DE04E3800B14A67 /* Config.xcconfig */,
+			);
+			name = "Recovered References";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -317,7 +326,8 @@
 /* Begin XCBuildConfiguration section */
 		609073B62DD9973B004E1355 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 60A401262DE04E3800B14A67 /* Config.xcconfig */;
+			baseConfigurationReferenceAnchor = 609073952DD9973A004E1355 /* myPMSApp */;
+			baseConfigurationReferenceRelativePath = Config.xcconfig;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -379,7 +389,8 @@
 		};
 		609073B72DD9973B004E1355 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 60A401262DE04E3800B14A67 /* Config.xcconfig */;
+			baseConfigurationReferenceAnchor = 609073952DD9973A004E1355 /* myPMSApp */;
+			baseConfigurationReferenceRelativePath = Config.xcconfig;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -433,7 +444,8 @@
 		};
 		609073B92DD9973B004E1355 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 60A401262DE04E3800B14A67 /* Config.xcconfig */;
+			baseConfigurationReferenceAnchor = 609073952DD9973A004E1355 /* myPMSApp */;
+			baseConfigurationReferenceRelativePath = Config.xcconfig;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -474,7 +486,8 @@
 		};
 		609073BA2DD9973B004E1355 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 60A401262DE04E3800B14A67 /* Config.xcconfig */;
+			baseConfigurationReferenceAnchor = 609073952DD9973A004E1355 /* myPMSApp */;
+			baseConfigurationReferenceRelativePath = Config.xcconfig;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
