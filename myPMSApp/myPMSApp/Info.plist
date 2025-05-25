@@ -8,18 +8,20 @@
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>CFBundleURLName</key>
-			<string>com.areekaras.myPMSApp</string>
+			<string></string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>dmmpqfixtgdanpgvofzr</string>
+				<string>com.googleusercontent.apps.195604724100-md7c7qpllssl10egkeluuv2gc45oi11d</string>
 			</array>
 		</dict>
 	</array>
+	<key>GIDClientID</key>
+	<string>$(GIDClientID)</string>
+	<key>GOOGLE_CALLBACK_URL</key>
+	<string>$(GOOGLE_CALLBACK_URL)</string>
 	<key>SUPABASE_KEY</key>
 	<string>$(SUPABASE_KEY)</string>
 	<key>SUPABASE_URL</key>
 	<string>$(SUPABASE_URL)</string>
-	<key>GOOGLE_CALLBACK_URL</key>
-	<string>$(GOOGLE_CALLBACK_URL)</string>
 </dict>
 </plist>

@@ -2,51 +2,87 @@ import SwiftUI
 
 struct ContentView: View {
     @State private var selectedTab = 0
+    @State private var showLogoutAlert = false
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+    @EnvironmentObject private var authManager: AuthManager
     
     var body: some View {
-        if horizontalSizeClass == .regular {
-            NavigationSplitView {
-                // Sidebar content
-                VStack(alignment: .leading, spacing: 16) {
-                    HStack {
-                        Image(systemName: "dollarsign.circle")
-                        Text("Expenses")
+        Group {
+            if horizontalSizeClass == .regular {
+                NavigationSplitView {
+                    // Sidebar content
+                    VStack(alignment: .leading, spacing: 16) {
+                        HStack {
+                            Image(systemName: "dollarsign.circle")
+                            Text("Expenses")
+                        }
+                        .foregroundColor(selectedTab == 0 ? .accentColor : .primary)
+                        .onTapGesture { selectedTab = 0 }
+                        
+                        HStack {
+                            Image(systemName: "lightbulb")
+                            Text("Ideas")
+                        }
+                        .foregroundColor(selectedTab == 1 ? .accentColor : .primary)
+                        .onTapGesture { selectedTab = 1 }
+                        
+                        Spacer()
+                        
+                        Button(action: {
+                            showLogoutAlert = true
+                        }) {
+                            HStack {
+                                Image(systemName: "rectangle.portrait.and.arrow.right")
+                                Text("Logout")
+                            }
+                        }
                     }
-                    .foregroundColor(selectedTab == 0 ? .accentColor : .primary)
-                    .onTapGesture { selectedTab = 0 }
-                    
-                    HStack {
-                        Image(systemName: "calendar")
-                        Text("Planner")
+                    .padding()
+                } detail: {
+                    if selectedTab == 0 {
+                        ExpensesView()
+                    } else {
+                        IdeasView()
                     }
-                    .foregroundColor(selectedTab == 1 ? .accentColor : .primary)
-                    .onTapGesture { selectedTab = 1 }
-                    
-                    Spacer()
                 }
-                .padding()
-            } detail: {
-                if selectedTab == 0 {
-                    ExpensesView()
-                } else {
-                    PlannerView()
+            } else {
+                NavigationStack {
+                    TabView(selection: $selectedTab) {
+                        ExpensesView()
+                            .tag(0)
+                            .tabItem {
+                                Label("Expenses", systemImage: "dollarsign.circle")
+                            }
+                        
+                        IdeasView()
+                            .tag(1)
+                            .tabItem {
+                                Label("Ideas", systemImage: "lightbulb")
+                            }
+                    }
+                }
+                .safeAreaInset(edge: .top) {
+                    HStack {
+                        Spacer()
+                        Button(action: {
+                            showLogoutAlert = true
+                        }) {
+                            Image(systemName: "rectangle.portrait.and.arrow.right")
+                        }
+                        .padding()
+                    }
                 }
             }
-        } else {
-            TabView(selection: $selectedTab) {
-                ExpensesView()
-                    .tag(0)
-                    .tabItem {
-                        Label("Expenses", systemImage: "dollarsign.circle")
-                    }
-                
-                PlannerView()
-                    .tag(1)
-                    .tabItem {
-                        Label("Planner", systemImage: "calendar")
-                    }
+        }
+        .alert("Sign Out", isPresented: $showLogoutAlert) {
+            Button("Cancel", role: .cancel) { }
+            Button("Sign Out", role: .destructive) {
+                Task {
+                    await authManager.signOut()
+                }
             }
+        } message: {
+            Text("Are you sure you want to sign out?")
         }
     }
 }
@@ -57,15 +93,6 @@ struct ExpensesView: View {
     var body: some View {
         NavigationStack {
             ExpenseListView(tracker: tracker)
-        }
-    }
-}
-
-struct PlannerView: View {
-    var body: some View {
-        NavigationStack {
-            Text("Planner")
-                .navigationTitle("Planner")
         }
     }
 }

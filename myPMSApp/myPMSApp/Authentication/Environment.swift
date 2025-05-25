@@ -16,7 +16,7 @@ enum AppEnvironment {
         return key
     }()
     
-    static let googleCallbackUrlString: URL = {
+    static let googleCallbackUrl: URL = {
         guard let urlString = Bundle.main.object(forInfoDictionaryKey: "GOOGLE_CALLBACK_URL") as? String,
               let url = URL(string: urlString) else {
             fatalError("GOOGLE_CALLBACK_URL not set in config")
