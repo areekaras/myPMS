@@ -17,8 +17,8 @@ struct ContentView: View {
                     .onTapGesture { selectedTab = 0 }
                     
                     HStack {
-                        Image(systemName: "calendar")
-                        Text("Planner")
+                        Image(systemName: "lightbulb")
+                        Text("Ideas")
                     }
                     .foregroundColor(selectedTab == 1 ? .accentColor : .primary)
                     .onTapGesture { selectedTab = 1 }
@@ -30,7 +30,7 @@ struct ContentView: View {
                 if selectedTab == 0 {
                     ExpensesView()
                 } else {
-                    PlannerView()
+                    IdeasView()
                 }
             }
         } else {
@@ -41,11 +41,22 @@ struct ContentView: View {
                         Label("Expenses", systemImage: "dollarsign.circle")
                     }
                 
-                PlannerView()
+                IdeasView()
                     .tag(1)
                     .tabItem {
-                        Label("Planner", systemImage: "calendar")
+                        Label("Ideas", systemImage: "lightbulb")
                     }
+            }
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button(action: {
+                        Task {
+                            await authManager.signOut()
+                        }
+                    }) {
+                        Image(systemName: "rectangle.portrait.and.arrow.right")
+                    }
+                }
             }
         }
     }
@@ -57,15 +68,6 @@ struct ExpensesView: View {
     var body: some View {
         NavigationStack {
             ExpenseListView(tracker: tracker)
-        }
-    }
-}
-
-struct PlannerView: View {
-    var body: some View {
-        NavigationStack {
-            Text("Planner")
-                .navigationTitle("Planner")
         }
     }
 }
