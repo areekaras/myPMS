@@ -11,7 +11,7 @@ import SwiftUI
 struct myPMSAppApp: App {
     @StateObject private var authManager = AuthManager()
     @StateObject private var expenseTracker = ExpenseTracker()
-    
+        
     var body: some Scene {
         WindowGroup {
             Group {
@@ -23,26 +23,11 @@ struct myPMSAppApp: App {
                     LoginView(authManager: authManager)
                 }
             }
-            .onOpenURL { url in
-                // Handle OAuth callback
-                Task {
-                    do {
-                        try await supabase.auth.session(from: url)
-                    } catch {
-                        print("OAuth callback error:", error)
-                    }
-                }
-            }
             .task {
-                // Check for existing session on launch
-                do {
-                    if try await supabase.auth.session != nil {
-                        await MainActor.run {
-                            authManager.isAuthenticated = true
-                        }
+                for await state in supabase.auth.authStateChanges {
+                    if [.initialSession, .signedIn, .signedOut].contains(state.event) {
+                        authManager.isAuthenticated = state.session != nil
                     }
-                } catch {
-                    print("Session check error:", error)
                 }
             }
         }
