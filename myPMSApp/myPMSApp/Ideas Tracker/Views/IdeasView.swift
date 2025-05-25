@@ -1,11 +1,11 @@
 import SwiftUI
 
 struct IdeasView: View {
-    @StateObject private var ideasManager = IdeasManager()
+    @StateObject private var ideasManager = IdeasManager(client: supabase)
     @State private var showingAddForm = false
     
     var body: some View {
-        NavigationView {
+        NavigationStack {
             Group {
                 if ideasManager.isLoading {
                     ProgressView()

@@ -1,7 +1,14 @@
 import SwiftUI
+import Supabase
 
 @MainActor
 class IdeasManager: ObservableObject {
+    private let client: SupabaseClient
+    
+    init(client: SupabaseClient) {
+        self.client = client
+    }
+    
     @Published var ideas: [Idea] = []
     @Published var isLoading = false
     @Published var error: String?
@@ -11,7 +18,7 @@ class IdeasManager: ObservableObject {
         error = nil
         
         do {
-            let response: [Idea] = try await supabase
+            let response: [Idea] = try await client
                 .from("ideas")
                 .select()
                 .order("created_at", ascending: false)
@@ -30,6 +37,7 @@ class IdeasManager: ObservableObject {
         let tagsArray = tags.split(separator: ",").map { String($0.trimmingCharacters(in: .whitespaces)) }
         
         struct IdeaPayload: Encodable {
+            let user_id: String
             let title: String
             let description: String?
             let category: String?
@@ -39,7 +47,8 @@ class IdeasManager: ObservableObject {
             let status: String
         }
         
-        let payload = IdeaPayload(
+        let payload = try await IdeaPayload(
+            user_id: client.auth.session.user.id.uuidString,
             title: title,
             description: description,
             category: category,
