@@ -12,6 +12,7 @@ struct AddExpenseForm: View {
     @State private var isAddingExpense = false
     @State private var showError = false
     @State private var errorMessage: String?
+    @State private var showAddCategory = false
     
     private var isFormValid: Bool {
         selectedCategory != nil && !description.isEmpty && amount > 0
@@ -39,6 +40,10 @@ struct AddExpenseForm: View {
                             Text(category.name).tag(Optional(category))
                         }
                     }
+                }
+                
+                Button("Add New Category") {
+                    showAddCategory = true
                 }
                 
                 if let category = selectedCategory {
@@ -91,6 +96,9 @@ struct AddExpenseForm: View {
             if let errorMessage {
                 Text(errorMessage)
             }
+        }
+        .sheet(isPresented: $showAddCategory) {
+            AddCategoryForm(tracker: tracker)
         }
         .overlay {
             if isAddingExpense {
