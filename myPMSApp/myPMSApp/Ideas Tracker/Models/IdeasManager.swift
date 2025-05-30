@@ -58,9 +58,49 @@ class IdeasManager: ObservableObject {
             status: Idea.Status.idea.rawValue
         )
         
-        try await supabase
+        try await client
             .from("ideas")
             .insert(payload)
+            .execute()
+        
+        await fetchIdeas()
+    }
+    
+    func updateIdea(_ idea: Idea, title: String, description: String?, category: String?, priority: Idea.Priority, tags: String, notes: String?) async throws {
+        let tagsArray = tags.split(separator: ",").map { String($0.trimmingCharacters(in: .whitespaces)) }
+        
+        struct IdeaPayload: Encodable {
+            let title: String
+            let description: String?
+            let category: String?
+            let priority: String
+            let tags: [String]
+            let notes: String?
+        }
+        
+        let payload = IdeaPayload(
+            title: title,
+            description: description,
+            category: category,
+            priority: priority.rawValue,
+            tags: tagsArray,
+            notes: notes
+        )
+        
+        try await client
+            .from("ideas")
+            .update(payload)
+            .eq("id", value: idea.id)
+            .execute()
+        
+        await fetchIdeas()
+    }
+    
+    func deleteIdea(_ idea: Idea) async throws {
+        try await client
+            .from("ideas")
+            .delete()
+            .eq("id", value: idea.id)
             .execute()
         
         await fetchIdeas()
