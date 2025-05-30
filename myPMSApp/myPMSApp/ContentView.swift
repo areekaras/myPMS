@@ -20,11 +20,18 @@ struct ContentView: View {
                         .onTapGesture { selectedTab = 0 }
                         
                         HStack {
-                            Image(systemName: "lightbulb")
-                            Text("Ideas")
+                            Image(systemName: "list.bullet")
+                            Text("Backlogs")
                         }
                         .foregroundColor(selectedTab == 1 ? .accentColor : .primary)
                         .onTapGesture { selectedTab = 1 }
+                        
+                        HStack {
+                            Image(systemName: "lightbulb")
+                            Text("Ideas")
+                        }
+                        .foregroundColor(selectedTab == 2 ? .accentColor : .primary)
+                        .onTapGesture { selectedTab = 2 }
                         
                         Spacer()
                         
@@ -41,6 +48,8 @@ struct ContentView: View {
                 } detail: {
                     if selectedTab == 0 {
                         ExpensesView()
+                    } else if selectedTab == 1 {
+                        BacklogView()
                     } else {
                         IdeasView()
                     }
@@ -54,8 +63,14 @@ struct ContentView: View {
                                 Label("Expenses", systemImage: "dollarsign.circle")
                             }
                         
-                        IdeasView()
+                        BacklogView()
                             .tag(1)
+                            .tabItem {
+                                Label("Backlogs", systemImage: "list.bullet")
+                            }
+                        
+                        IdeasView()
+                            .tag(2)
                             .tabItem {
                                 Label("Ideas", systemImage: "lightbulb")
                             }
