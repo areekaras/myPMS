@@ -3,6 +3,7 @@ import SwiftUI
 struct IdeasView: View {
     @StateObject private var ideasManager = IdeasManager(client: supabase)
     @State private var showingAddForm = false
+    @State private var selectedIdeaForEdit: Idea?
     
     var body: some View {
         NavigationStack {
@@ -14,8 +15,26 @@ struct IdeasView: View {
                 } else if ideasManager.ideas.isEmpty {
                     ContentUnavailableView("No Ideas Yet", systemImage: "lightbulb", description: Text("Tap + to add a new idea"))
                 } else {
-                    List(ideasManager.ideas) { idea in
-                        IdeaRowView(idea: idea)
+                    List {
+                        ForEach(ideasManager.ideas) { idea in
+                            IdeaRowView(idea: idea)
+                                .swipeActions(edge: .trailing) {
+                                    Button(role: .destructive) {
+                                        Task {
+                                            try? await ideasManager.deleteIdea(idea)
+                                        }
+                                    } label: {
+                                        Label("Delete", systemImage: "trash")
+                                    }
+                                    
+                                    Button {
+                                        selectedIdeaForEdit = idea
+                                    } label: {
+                                        Label("Edit", systemImage: "pencil")
+                                    }
+                                    .tint(.blue)
+                                }
+                        }
                     }
                 }
             }
@@ -29,6 +48,9 @@ struct IdeasView: View {
             }
             .sheet(isPresented: $showingAddForm) {
                 AddIdeaForm(ideasManager: ideasManager)
+            }
+            .sheet(item: $selectedIdeaForEdit) { idea in
+                AddIdeaForm(ideasManager: ideasManager, ideaToEdit: idea)
             }
             .task {
                 await ideasManager.fetchIdeas()

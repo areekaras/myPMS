@@ -1,45 +1,73 @@
 import SwiftUI
 
 struct AddIdeaForm: View {
-    @Environment(\.dismiss) private var dismiss
     @ObservedObject var ideasManager: IdeasManager
+    @Environment(\.dismiss) private var dismiss
     
-    @State private var title = ""
-    @State private var description = ""
-    @State private var category = ""
-    @State private var priority = Idea.Priority.medium
-    @State private var tags = ""
-    @State private var notes = ""
-    @State private var isSubmitting = false
-    @State private var error: String?
+    let ideaToEdit: Idea?
+    
+    @State private var title: String = ""
+    @State private var ideaDescription: String = ""
+    @State private var category: String = ""
+    @State private var priority: Idea.Priority = .low
+    @State private var tags: String = ""
+    @State private var notes: String = ""
+    @State private var isProcessing = false
+    @State private var showError = false
+    @State private var errorMessage: String?
+    
+    init(ideasManager: IdeasManager, ideaToEdit: Idea? = nil) {
+        self.ideasManager = ideasManager
+        self.ideaToEdit = ideaToEdit
+        
+        // Initialize state with existing idea values if editing
+        if let idea = ideaToEdit {
+            _title = State(initialValue: idea.title)
+            _ideaDescription = State(initialValue: idea.description ?? "")
+            _category = State(initialValue: idea.category ?? "")
+            _priority = State(initialValue: idea.priority)
+            _tags = State(initialValue: idea.tags.joined(separator: ", "))
+            _notes = State(initialValue: idea.notes ?? "")
+        }
+    }
+    
+    private var isFormValid: Bool {
+        !title.isEmpty
+    }
     
     var body: some View {
-        NavigationView {
+        NavigationStack {
             Form {
-                Section("Basic Info") {
-                    TextField("Title", text: $title)
-                    TextField("Description", text: $description, axis: .vertical)
-                        .lineLimit(3...6)
-                    TextField("Category", text: $category)
-                }
-                
                 Section("Details") {
-                    Picker("Priority", selection: $priority) {
-                        ForEach(Idea.Priority.allCases, id: \.self) { priority in
-                            Text(priority.rawValue)
-                                .tag(priority)
-                        }
+                    TextField("Title", text: $title)
+                    
+                    VStack(alignment: .leading) {
+                        Text("Description")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                        TextEditor(text: $ideaDescription)
+                            .frame(minHeight: 100)
                     }
                     
+                    TextField("Category", text: $category)
+                    
+                    Picker("Priority", selection: $priority) {
+                        ForEach(Idea.Priority.allCases) { priority in
+                            Text(priority.rawValue).tag(priority)
+                        }
+                    }
+                }
+                
+                Section("Tags") {
                     TextField("Tags (comma separated)", text: $tags)
                 }
                 
                 Section("Additional Notes") {
-                    TextField("Notes", text: $notes, axis: .vertical)
-                        .lineLimit(3...6)
+                    TextEditor(text: $notes)
+                        .frame(minHeight: 100)
                 }
             }
-            .navigationTitle("New Idea")
+            .navigationTitle(ideaToEdit != nil ? "Edit Idea" : "New Idea")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
@@ -49,52 +77,66 @@ struct AddIdeaForm: View {
                 }
                 
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("Add") {
+                    Button(ideaToEdit != nil ? "Save" : "Add") {
                         Task {
-                            await addIdea()
+                            await saveIdea()
                         }
                     }
-                    .disabled(title.isEmpty || isSubmitting)
+                    .disabled(!isFormValid || isProcessing)
                 }
             }
-            .overlay {
-                if isSubmitting {
-                    ProgressView()
-                        .padding()
-                        .background(.regularMaterial)
-                        .cornerRadius(8)
-                }
+        }
+        .alert("Error", isPresented: $showError) {
+            Button("OK") { }
+        } message: {
+            if let errorMessage {
+                Text(errorMessage)
             }
-            .alert("Error", isPresented: .constant(error != nil)) {
-                Button("OK") {
-                    error = nil
-                }
-            } message: {
-                if let error {
-                    Text(error)
-                }
+        }
+        .overlay {
+            if isProcessing {
+                ProgressView(ideaToEdit != nil ? "Saving idea..." : "Adding idea...")
+                    .padding()
+                    .background(.regularMaterial)
+                    .cornerRadius(8)
             }
         }
     }
     
-    private func addIdea() async {
-        isSubmitting = true
-        error = nil
+    private func saveIdea() async {
+        isProcessing = true
         
         do {
-            try await ideasManager.addIdea(
-                title: title,
-                description: description.isEmpty ? nil : description,
-                category: category.isEmpty ? nil : category,
-                priority: priority,
-                tags: tags,
-                notes: notes.isEmpty ? nil : notes
-            )
+            if let idea = ideaToEdit {
+                try await ideasManager.updateIdea(
+                    idea,
+                    title: title,
+                    description: ideaDescription.isEmpty ? nil : ideaDescription,
+                    category: category.isEmpty ? nil : category,
+                    priority: priority,
+                    tags: tags,
+                    notes: notes.isEmpty ? nil : notes
+                )
+            } else {
+                try await ideasManager.addIdea(
+                    title: title,
+                    description: ideaDescription.isEmpty ? nil : ideaDescription,
+                    category: category.isEmpty ? nil : category,
+                    priority: priority,
+                    tags: tags,
+                    notes: notes.isEmpty ? nil : notes
+                )
+            }
             
-            dismiss()
+            await MainActor.run {
+                dismiss()
+            }
         } catch {
-            self.error = error.localizedDescription
-            isSubmitting = false
+            await MainActor.run {
+                isProcessing = false
+                errorMessage = error.localizedDescription
+                showError = true
+            }
         }
     }
 }
